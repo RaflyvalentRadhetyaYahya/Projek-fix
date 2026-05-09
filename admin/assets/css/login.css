@@ -1,0 +1,167 @@
+/* ==========================================
+   LOGIN - Page Specific Styles
+   ========================================== */
+
+body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%);
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Decorative Background Elements */
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.6;
+    animation: float 10s infinite ease-in-out alternate;
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    background: #ff007a;
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    width: 500px;
+    height: 500px;
+    background: #00e5ff;
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(30px, 50px); }
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    z-index: 1;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+}
+
+.login-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+}
+
+.login-header h4 {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.login-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* SSO Styles */
+.sso-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-sso {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-sso:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+.btn-sso:active {
+    transform: translateY(0);
+}
+
+.sso-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+    padding: 0 10px;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alert {
+    font-size: 13px;
+    border-radius: 10px;
+    padding: 10px 15px;
+}
