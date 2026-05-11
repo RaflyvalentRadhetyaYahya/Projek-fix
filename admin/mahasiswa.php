@@ -66,6 +66,10 @@ $data_mahasiswa = $stmt->fetchAll();
         <a href="pengajuan.php">
             <i class="bi bi-send"></i> Pengajuan
         </a>
+
+        <a href="perusahaan.php">
+            <i class="bi bi-building"></i> Perusahaan
+        </a>
     </div>
 
 </div>

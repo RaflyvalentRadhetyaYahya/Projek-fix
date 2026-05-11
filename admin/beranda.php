@@ -70,6 +70,10 @@ $page = "beranda";
         <a href="pengajuan.php">
             <i class="bi bi-send me-2"></i> Pengajuan
         </a>
+
+        <a href="perusahaan.php">
+            <i class="bi bi-building me-2"></i> Perusahaan
+        </a>
     </div>
 
 

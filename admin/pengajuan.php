@@ -76,6 +76,10 @@ $data_dosen = $stmtDosen->fetchAll();
         <a href="pengajuan.php" class="<?= ($page == 'pengajuan') ? 'active' : '' ?>">
             <i class="bi bi-send"></i> Pengajuan
         </a>
+
+        <a href="perusahaan.php">
+            <i class="bi bi-building"></i> Perusahaan
+        </a>
     </div>
 
 </div>
