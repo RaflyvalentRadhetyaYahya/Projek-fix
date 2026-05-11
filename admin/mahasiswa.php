@@ -125,6 +125,9 @@ $data_mahasiswa = $stmt->fetchAll();
                     <option value="Tangerang">Tangerang</option>
                 </select>
             </div>
+            <a href="tambahMahasiswa.php" class="btn-add">
+                <i class="bi bi-plus-lg me-2"></i> Tambah Mahasiswa
+            </a>
         </div>
     </div>
 

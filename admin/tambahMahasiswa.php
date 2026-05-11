@@ -7,23 +7,27 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$page = "dosen";
+$page = "mahasiswa";
+
+// Ambil data prodi untuk dropdown
+$stmtProdi = $pdo->query("SELECT id, nama_prodi FROM prodi ORDER BY nama_prodi ASC");
+$data_prodi = $stmtProdi->fetchAll();
 
 $success = false;
 $error = null;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nip = trim($_POST['nip']);
+    $nim = trim($_POST['nim']);
     $nama = trim($_POST['nama']);
+    $prodi_id = (int)$_POST['prodi_id'];
+    $no_telp = trim($_POST['no_telp'] ?? '');
     $email = trim($_POST['email']);
-    $no_telp = trim($_POST['telepon'] ?? '');
-    $bidang = trim($_POST['bidang'] ?? '');
 
-    // Validasi email harus @polije.ac.id
+    // Validasi email harus @student.polije.ac.id
     $domain = strtolower(explode('@', $email)[1] ?? '');
-    if ($domain !== 'polije.ac.id') {
-        $error = 'Email dosen harus menggunakan domain @polije.ac.id untuk login SSO.';
+    if ($domain !== 'student.polije.ac.id') {
+        $error = 'Email mahasiswa harus menggunakan domain @student.polije.ac.id untuk login SSO.';
     }
 
     if (!$error) {
@@ -38,15 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$error) {
         // Buat user account (password random karena login via SSO)
         $randomPass = md5(bin2hex(random_bytes(16)));
-        $stmtUser = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'dosen')");
+        $stmtUser = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'mahasiswa')");
         $stmtUser->execute([$email, $randomPass]);
         $user_id = $pdo->lastInsertId();
 
-        // Buat data dosen
-        $stmtDosen = $pdo->prepare("INSERT INTO dosen (user_id, nip, nama_lengkap, no_telp, bidang_keahlian) VALUES (?, ?, ?, ?, ?)");
-        $stmtDosen->execute([$user_id, $nip, $nama, $no_telp, $bidang]);
+        // Buat data mahasiswa
+        $stmtMhs = $pdo->prepare("INSERT INTO mahasiswa (user_id, prodi_id, nim, nama_lengkap, no_telp, email) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmtMhs->execute([$user_id, $prodi_id, $nim, $nama, $no_telp, $email]);
 
-        header("Location: dosen.php?status=success");
+        header("Location: mahasiswa.php?status=success");
         exit;
     }
 }
@@ -56,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Tambah Dosen - Sistem Magang</title>
+<title>Tambah Mahasiswa - Sistem Magang</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -82,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <i class="bi bi-grid"></i> Beranda
         </a>
 
-        <a href="mahasiswa.php">
+        <a href="mahasiswa.php" class="<?= ($page == 'mahasiswa') ? 'active' : '' ?>">
             <i class="bi bi-people"></i> Mahasiswa
         </a>
 
-        <a href="dosen.php" class="<?= ($page == 'dosen') ? 'active' : '' ?>">
+        <a href="dosen.php">
             <i class="bi bi-person-badge"></i> Dosen
         </a>
 
@@ -134,8 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- PAGE TITLE -->
 <div class="mb-4">
-    <h4 style="color:#2d6cdf;">Tambah Dosen Pembimbing</h4>
-    <p class="text-muted mb-0" style="font-size:14px;">Daftarkan dosen pembimbing baru. Dosen akan login menggunakan Google SSO dengan email <strong>@polije.ac.id</strong>.</p>
+    <h4 style="color:#2d6cdf;">Tambah Mahasiswa</h4>
+    <p class="text-muted mb-0" style="font-size:14px;">Daftarkan mahasiswa baru. Mahasiswa akan login menggunakan Google SSO dengan email <strong>@student.polije.ac.id</strong>.</p>
 </div>
 
 <?php if ($error): ?>
@@ -155,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="bi bi-shield-check me-2" style="font-size: 20px; color: #2563eb;"></i>
                 <div>
                     <div style="font-weight: 600; color: #1e293b; font-size: 14px;">Login via Google SSO</div>
-                    <div style="font-size: 12px; color: #64748b;">Dosen tidak memerlukan password. Mereka akan login menggunakan akun Google sesuai email yang didaftarkan.</div>
+                    <div style="font-size: 12px; color: #64748b;">Mahasiswa tidak memerlukan password. Mereka akan login menggunakan akun Google sesuai email yang didaftarkan.</div>
                 </div>
             </div>
         </div>
@@ -163,35 +167,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row g-4">
             <div class="col-md-6">
                 <label class="form-label">Email Google (SSO Login) <span class="text-danger">*</span></label>
-                <input type="email" class="form-control custom-input" name="email" placeholder="contoh: nama@polije.ac.id" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-                <small class="text-muted" style="font-size:11px;">Harus menggunakan domain @polije.ac.id</small>
+                <input type="email" class="form-control custom-input" name="email" placeholder="contoh: nama@student.polije.ac.id" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                <small class="text-muted" style="font-size:11px;">Harus menggunakan domain @student.polije.ac.id</small>
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Nomor Induk Pegawai (NIP) <span class="text-danger">*</span></label>
-                <input type="text" class="form-control custom-input" name="nip" placeholder="Masukkan NIP Dosen" required value="<?= htmlspecialchars($_POST['nip'] ?? '') ?>">
+                <label class="form-label">Nomor Induk Mahasiswa (NIM) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" name="nim" placeholder="Masukkan NIM Mahasiswa" required value="<?= htmlspecialchars($_POST['nim'] ?? '') ?>">
             </div>
             
             <div class="col-md-6">
-                <label class="form-label">Nama Lengkap (Beserta Gelar) <span class="text-danger">*</span></label>
-                <input type="text" class="form-control custom-input" name="nama" placeholder="Contoh: Dr. Budi Santoso, M.Kom." required value="<?= htmlspecialchars($_POST['nama'] ?? '') ?>">
+                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" name="nama" placeholder="Contoh: Ahmad Fauzi" required value="<?= htmlspecialchars($_POST['nama'] ?? '') ?>">
             </div>
             
+            <div class="col-md-6">
+                <label class="form-label">Program Studi <span class="text-danger">*</span></label>
+                <select class="form-select custom-input" name="prodi_id" required>
+                    <option value="" disabled selected>Pilih Program Studi</option>
+                    <?php foreach ($data_prodi as $prodi): ?>
+                    <option value="<?= $prodi['id'] ?>" <?= (($_POST['prodi_id'] ?? '') == $prodi['id']) ? 'selected' : '' ?>><?= htmlspecialchars($prodi['nama_prodi']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <div class="col-md-6">
                 <label class="form-label">Nomor Telepon / WhatsApp</label>
-                <input type="text" class="form-control custom-input" name="telepon" placeholder="Contoh: 081234567890" value="<?= htmlspecialchars($_POST['telepon'] ?? '') ?>">
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Bidang Keahlian</label>
-                <input type="text" class="form-control custom-input" name="bidang" placeholder="Contoh: Software Engineering" value="<?= htmlspecialchars($_POST['bidang'] ?? '') ?>">
+                <input type="text" class="form-control custom-input" name="no_telp" placeholder="Contoh: 081234567890" value="<?= htmlspecialchars($_POST['no_telp'] ?? '') ?>">
             </div>
         </div>
         
         <hr class="my-4" style="border-color: #f1f5f9;">
         
         <div class="d-flex justify-content-end gap-2">
-            <a href="dosen.php" class="btn btn-cancel-form">Batal</a>
+            <a href="mahasiswa.php" class="btn btn-cancel-form">Batal</a>
             <button type="submit" class="btn btn-save-form">
                 <i class="bi bi-save me-1"></i> Simpan Data
             </button>
