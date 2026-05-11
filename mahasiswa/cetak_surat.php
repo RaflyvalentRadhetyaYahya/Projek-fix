@@ -2,11 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['mahasiswa_logged_in'])) {
-    // Mock login fallback
-    $_SESSION['mahasiswa_logged_in'] = true;
-    $_SESSION['mahasiswa_id'] = 1; // 1 = Ahmad Fauzi di mock DB
-}
+require_once '../auth/guard.php';
+require_role('mahasiswa');
 
 $mahasiswa_id = $_SESSION['mahasiswa_id'];
 

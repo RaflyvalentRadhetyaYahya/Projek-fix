@@ -1,4 +1,7 @@
 <?php
+require_once '../auth/guard.php';
+require_role('mahasiswa');
+
 $page = "laporan_akhir";
 $nama_mahasiswa = "Ahmad Fauzi";
 $nim = "10123001";
@@ -52,7 +55,7 @@ $prodi = "Teknik Informatika";
                         <div class="dropdown-header">Akun Saya</div>
                         <a href="#" id="btnProfil"><i class="bi bi-person me-2"></i>Profil</a>
                         <div class="dropdown-divider my-1"></div>
-                        <a href="login.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
+                        <a href="../logout.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
                     </div>
                 </div>
             </div>

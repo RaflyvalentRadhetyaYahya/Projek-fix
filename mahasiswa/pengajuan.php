@@ -2,10 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['mahasiswa_logged_in'])) {
-    $_SESSION['mahasiswa_logged_in'] = true;
-    $_SESSION['mahasiswa_id'] = 1; 
-}
+require_once '../auth/guard.php';
+require_role('mahasiswa');
 
 $mahasiswa_id = $_SESSION['mahasiswa_id'];
 
@@ -130,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="dropdown-header">Akun Saya</div>
-                        <a href="login.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
+                        <a href="../logout.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
                     </div>
                 </div>
             </div>
@@ -297,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Apakah Anda yakin ingin keluar dari sistem?</p>
         <div class="modal-actions">
             <button class="btn-cancel" id="btnBatal">Batal</button>
-            <a href="login.php" style="flex:1;text-decoration:none;"><button class="btn-logout" style="width:100%;">Ya, Keluar</button></a>
+            <a href="../logout.php" style="flex:1;text-decoration:none;"><button class="btn-logout" style="width:100%;">Ya, Keluar</button></a>
         </div>
     </div>
 </div>

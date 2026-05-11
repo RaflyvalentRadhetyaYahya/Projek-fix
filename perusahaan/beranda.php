@@ -3,7 +3,7 @@ session_start();
 require_once '../config.php';
 
 if (!isset($_SESSION['perusahaan_logged_in']) || $_SESSION['perusahaan_logged_in'] !== true) {
-    header("Location: login.php");
+    header("Location: ../login.php?role=perusahaan");
     exit;
 }
 
@@ -63,7 +63,7 @@ $logbook_menunggu = $total_log->fetchColumn();
                 <p class="text-muted mb-0">Selamat datang kembali di portal mentor perusahaan.</p>
             </div>
             <div class="profile-section">
-                <a href="logout.php" class="btn btn-outline-danger btn-sm" style="border-radius:8px; font-weight:600;"><i class="bi bi-box-arrow-right"></i> Keluar</a>
+                <a href="../logout.php" class="btn btn-outline-danger btn-sm" style="border-radius:8px; font-weight:600;"><i class="bi bi-box-arrow-right"></i> Keluar</a>
             </div>
         </div>
 

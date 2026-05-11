@@ -3,7 +3,7 @@ session_start();
 require_once '../config.php';
 
 if (!isset($_SESSION['perusahaan_logged_in']) || $_SESSION['perusahaan_logged_in'] !== true) {
-    header("Location: login.php");
+    header("Location: ../login.php?role=perusahaan");
     exit;
 }
 

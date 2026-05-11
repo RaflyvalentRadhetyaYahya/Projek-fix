@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
             
             <div class="text-center">
-                <a href="login.php" class="back-link">
+                <a href="../login.php?role=admin" class="back-link">
                     <i class="bi bi-arrow-left me-1"></i> Kembali ke Login
                 </a>
             </div>

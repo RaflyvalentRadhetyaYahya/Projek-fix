@@ -2,10 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['dosen_logged_in'])) {
-    $_SESSION['dosen_logged_in'] = true;
-    $_SESSION['dosen_id'] = 1;
-}
+require_once '../auth/guard.php';
+require_role('dosen');
 
 $dosen_id = $_SESSION['dosen_id'];
 $stmtD = $pdo->prepare("SELECT nama_lengkap, nip FROM dosen WHERE id = ?");
@@ -15,16 +13,20 @@ $dosen = $stmtD->fetch();
 $page = "log_kunjungan";
 $nama_dosen = $dosen ? $dosen['nama_lengkap'] : "Dr. Ir. Suyanto, M.T.";
 
-// Buat tabel jika belum ada
-$pdo->exec("CREATE TABLE IF NOT EXISTS kunjungan_dosen (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    dosen_id INT NOT NULL,
-    perusahaan_id INT NOT NULL,
-    tanggal DATE NOT NULL,
-    catatan TEXT,
-    dokumentasi VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)");
+// Buat tabel jika belum ada (mencegah error jika migration belum dijalankan)
+$stmtTable = $pdo->prepare("SHOW TABLES LIKE 'kunjungan_dosen'");
+$stmtTable->execute();
+if (!$stmtTable->fetch()) {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS kunjungan_dosen (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        dosen_id INT NOT NULL,
+        perusahaan_id INT NOT NULL,
+        tanggal DATE NOT NULL,
+        catatan TEXT,
+        dokumentasi VARCHAR(255) NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $perusahaan_id = $_POST['perusahaan_id'];
@@ -79,7 +81,7 @@ $perusahaan_bimbingan = $stmtPerush->fetchAll();
             <a href="log_kunjungan.php" class="active">Log Kunjungan</a>
         </div>
         <div class="nav-right">
-            <a href="../index.php" class="btn btn-outline-danger btn-sm">Keluar</a>
+            <a href="../logout.php" class="btn btn-outline-danger btn-sm">Keluar</a>
         </div>
     </div>
 

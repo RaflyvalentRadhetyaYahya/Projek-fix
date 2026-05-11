@@ -2,11 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['kaprodi_logged_in'])) {
-    $_SESSION['kaprodi_logged_in'] = true;
-    $_SESSION['kaprodi_id'] = 1;
-    $_SESSION['prodi_id'] = 1;
-}
+require_once '../auth/guard.php';
+require_role('kaprodi');
 
 $kaprodi_id = $_SESSION['kaprodi_id'];
 $prodi_id = $_SESSION['prodi_id'];
@@ -68,7 +65,7 @@ $data_dosen = $stmtDosen->fetchAll();
         </div>
         <div class="nav-right">
             <div class="profile-section">
-                <a href="../index.php" class="btn btn-outline-danger btn-sm">Keluar</a>
+                <a href="../logout.php" class="btn btn-outline-danger btn-sm">Keluar</a>
             </div>
         </div>
     </div>

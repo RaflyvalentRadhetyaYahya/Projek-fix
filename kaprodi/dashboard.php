@@ -2,14 +2,8 @@
 session_start();
 require_once '../config.php';
 
-// Mock session kaprodi for testing if not logged in (because we don't have login yet)
-// We will assume kaprodi uses the global login or a mockup
-if (!isset($_SESSION['kaprodi_logged_in'])) {
-    // For demo/development purposes since we are 'doing everything' but some logins aren't fully setup
-    $_SESSION['kaprodi_logged_in'] = true;
-    $_SESSION['kaprodi_id'] = 1; // Assuming kaprodi id 1
-    $_SESSION['prodi_id'] = 1;
-}
+require_once '../auth/guard.php';
+require_role('kaprodi');
 
 $kaprodi_id = $_SESSION['kaprodi_id'];
 $prodi_id = $_SESSION['prodi_id'];
@@ -238,7 +232,7 @@ $deg_menunggu = ($menunggu / $total_status) * 360;
             <p>Apakah Anda yakin ingin keluar dari sistem?</p>
             <div class="modal-actions">
                 <button class="btn-cancel" id="btnBatal">Batal</button>
-                <a href="../index.php" class="modal-logout-link"><button class="btn-logout">Ya, Keluar</button></a>
+                <a href="../logout.php" class="modal-logout-link"><button class="btn-logout">Ya, Keluar</button></a>
             </div>
         </div>
     </div>

@@ -2,11 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['kaprodi_logged_in'])) {
-    $_SESSION['kaprodi_logged_in'] = true;
-    $_SESSION['kaprodi_id'] = 1;
-    $_SESSION['prodi_id'] = 1;
-}
+require_once '../auth/guard.php';
+require_role('kaprodi');
 
 $kaprodi_id = $_SESSION['kaprodi_id'];
 $prodi_id = $_SESSION['prodi_id'];
@@ -178,7 +175,7 @@ $data_monitoring = $stmtMon->fetchAll();
             <p>Apakah Anda yakin ingin keluar dari sistem?</p>
             <div class="modal-actions">
                 <button class="btn-cancel" id="btnBatal">Batal</button>
-                <a href="../index.php" class="modal-logout-link"><button class="btn-logout">Ya, Keluar</button></a>
+                <a href="../logout.php" class="modal-logout-link"><button class="btn-logout">Ya, Keluar</button></a>
             </div>
         </div>
     </div>

@@ -2,10 +2,8 @@
 session_start();
 require_once '../config.php';
 
-if (!isset($_SESSION['dosen_logged_in'])) {
-    $_SESSION['dosen_logged_in'] = true;
-    $_SESSION['dosen_id'] = 1;
-}
+require_once '../auth/guard.php';
+require_role('dosen');
 
 $dosen_id = $_SESSION['dosen_id'];
 $stmtD = $pdo->prepare("SELECT nama_lengkap, nip FROM dosen WHERE id = ?");
@@ -78,7 +76,7 @@ $data_mhs = $stmtMhs->fetchAll();
                         <div class="dropdown-header">Akun Saya</div>
                         <a href="#" id="btnProfil"><i class="bi bi-person me-2"></i>Profil</a>
                         <div class="dropdown-divider my-1"></div>
-                        <a href="../index.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
+                        <a href="../logout.php" class="text-danger" id="btnKeluar"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a>
                     </div>
                 </div>
             </div>
@@ -199,7 +197,7 @@ $data_mhs = $stmtMhs->fetchAll();
             <p>Apakah Anda yakin ingin keluar dari sistem?</p>
             <div class="modal-actions">
                 <button class="btn-cancel" id="btnBatal">Batal</button>
-                <a href="../index.php" style="flex:1;text-decoration:none;"><button class="btn-logout" style="width:100%;">Ya, Keluar</button></a>
+                <a href="../logout.php" style="flex:1;text-decoration:none;"><button class="btn-logout" style="width:100%;">Ya, Keluar</button></a>
             </div>
         </div>
     </div>
